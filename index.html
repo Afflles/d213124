@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Cyber Shop</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Exo+2:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        :root {
+            --bg-primary: #06071a;
+            --bg-card: rgba(16, 18, 52, 0.85);
+            --accent: #00d4ff;
+            --accent-dim: rgba(0, 212, 255, 0.12);
+            --purple: #7b2dff;
+            --gradient: linear-gradient(135deg, #00d4ff 0%, #7b2dff 100%);
+            --text: #e4e8ff;
+            --text-dim: #6b73a0;
+            --border: rgba(90, 100, 200, 0.15);
+            --danger: #ff4b6e;
+            --success: #00e68a;
+            --font-h: 'Rajdhani', 'Segoe UI', sans-serif;
+            --font-b: 'Exo 2', 'Segoe UI', sans-serif;
+        }
+
+        html, body { height: 100%; }
+        body {
+            font-family: var(--font-b);
+            background: var(--bg-primary);
+            color: var(--text);
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed; inset: 0;
+            background:
+                radial-gradient(ellipse at 15% 30%, rgba(123,45,255,.12) 0%, transparent 55%),
+                radial-gradient(ellipse at 85% 15%, rgba(0,212,255,.09) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 95%, rgba(123,45,255,.07) 0%, transparent 45%);
+            pointer-events: none; z-index: 0;
+        }
+
+        .app {
+            position: relative; z-index: 1;
+            max-width: 420px; margin: 0 auto;
+            padding: 20px 16px 32px;
+            min-height: 100vh;
+        }
+
+        .screen { display: none; animation: slideIn .35s ease-out; }
+        .screen.active { display: block; }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(16px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ─── Welcome ─── */
+        .welcome {
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            min-height: 82vh; text-align: center;
+        }
+        .logo-wrap {
+            width: 96px; height: 96px;
+            background: var(--gradient);
+            border-radius: 26px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 46px; margin-bottom: 28px;
+            position: relative;
+            box-shadow: 0 0 40px rgba(0,212,255,.25), 0 0 80px rgba(123,45,255,.15);
+        }
+        .logo-wrap::after {
+            content: ''; position: absolute; inset: -4px;
+            border-radius: 30px; background: var(--gradient);
+            z-index: -1; filter: blur(18px); opacity: .45;
+        }
+        .shop-title {
+            font-family: var(--font-h); font-size: 34px; font-weight: 700;
+            letter-spacing: 3px;
+            background: var(--gradient);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .shop-sub {
+            color: var(--text-dim); font-size: 13px;
+            letter-spacing: 2px; text-transform: uppercase;
+            margin: 6px 0 44px;
+        }
+
+        /* ─── Buttons ─── */
+        .btn {
+            width: 100%; border: none; border-radius: 14px;
+            font-family: var(--font-h); font-weight: 600;
+            letter-spacing: .8px; cursor: pointer;
+            transition: transform .15s, box-shadow .25s;
+            -webkit-appearance: none;
+        }
+        .btn:active { transform: scale(.96); }
+
+        .btn-main {
+            padding: 16px; font-size: 17px; color: #fff;
+            background: var(--gradient);
+            box-shadow: 0 4px 24px rgba(0,212,255,.2);
+            position: relative; overflow: hidden;
+        }
+        .btn-main::after {
+            content: ''; position: absolute;
+            top: 0; left: -110%; width: 60%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,.18), transparent);
+            transition: left .55s;
+        }
+        .btn-main:hover::after { left: 110%; }
+
+        .btn-ghost {
+            padding: 14px; font-size: 15px;
+            color: var(--text-dim);
+            background: transparent;
+            border: 1px solid var(--border) !important;
+        }
+
+        .btn-group { display: flex; flex-direction: column; gap: 10px; }
+
+        /* ─── Page header ─── */
+        .pg-head {
+            display: flex; align-items: center; gap: 12px;
+            margin-bottom: 22px;
+        }
+        .pg-back {
+            width: 38px; height: 38px;
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 12px; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; color: var(--text); font-size: 18px;
+            transition: transform .15s;
+        }
+        .pg-back:active { transform: scale(.9); }
+        .pg-title { font-family: var(--font-h); font-size: 21px; font-weight: 700; }
+
+        /* ─── Progress ─── */
+        .progress { display: flex; gap: 6px; margin-bottom: 26px; }
+        .progress span {
+            flex: 1; height: 3px;
+            background: var(--border); border-radius: 2px;
+            transition: background .3s;
+        }
+        .progress span.on { background: var(--gradient); }
+
+        /* ─── Section titles ─── */
+        .sec-title {
+            font-family: var(--font-h); font-size: 17px; font-weight: 600;
+            display: flex; align-items: center; gap: 10px;
+            margin-bottom: 12px;
+        }
+        .badge {
+            width: 26px; height: 26px;
+            background: var(--gradient); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 13px; font-weight: 700; color: #fff;
+        }
+
+        /* ─── Server cards ─── */
+        .srv-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 26px; }
+        .srv {
+            padding: 14px 16px;
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 14px; cursor: pointer;
+            display: flex; align-items: center; gap: 14px;
+            transition: all .2s;
+        }
+        .srv:active { transform: scale(.97); }
+        .srv.on {
+            border-color: var(--accent);
+            background: var(--accent-dim);
+            box-shadow: 0 0 24px rgba(0,212,255,.08);
+        }
+        .srv-ico {
+            width: 40px; height: 40px;
+            background: rgba(20,22,58,.9); border-radius: 11px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 19px; transition: background .25s;
+        }
+        .srv.on .srv-ico { background: var(--gradient); }
+        .srv-name { font-family: var(--font-h); font-size: 16px; font-weight: 600; }
+        .srv-check {
+            margin-left: auto; width: 22px; height: 22px;
+            border: 2px solid var(--border); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 12px; color: transparent; transition: all .2s;
+        }
+        .srv.on .srv-check {
+            border-color: var(--accent); color: var(--accent);
+            background: var(--accent-dim);
+        }
+
+        /* ─── Inputs ─── */
+        .field { margin-bottom: 22px; }
+        .field label {
+            display: block; font-size: 12px; color: var(--text-dim);
+            letter-spacing: .4px; margin-bottom: 7px;
+        }
+        .field input {
+            width: 100%; padding: 13px 16px;
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 13px; color: var(--text);
+            font-family: var(--font-b); font-size: 16px;
+            outline: none; transition: border-color .25s, box-shadow .25s;
+        }
+        .field input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(0,212,255,.1);
+        }
+        .field input::placeholder { color: rgba(107,115,160,.45); }
+        .field .hint {
+            font-size: 11px; color: var(--text-dim);
+            margin-top: 5px; opacity: .7;
+        }
+        .field .err {
+            font-size: 12px; color: var(--danger);
+            margin-top: 5px; display: none;
+        }
+
+        /* ─── Confirm card ─── */
+        .conf-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 18px; padding: 22px; margin-bottom: 22px;
+        }
+        .conf-head {
+            font-family: var(--font-h); font-size: 20px; font-weight: 700;
+            text-align: center; margin-bottom: 18px;
+        }
+        .conf-row {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 11px 0;
+            border-bottom: 1px solid var(--border);
+        }
+        .conf-row:last-child { border-bottom: none; }
+        .conf-row .lbl { color: var(--text-dim); font-size: 14px; }
+        .conf-row .val {
+            font-family: var(--font-h); font-weight: 600; font-size: 16px;
+        }
+
+        /* ─── Success ─── */
+        .done-wrap {
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            min-height: 75vh; text-align: center;
+        }
+        .done-ico {
+            width: 84px; height: 84px;
+            background: linear-gradient(135deg, #00e68a, #00b36b);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 40px; color: #fff;
+            margin-bottom: 22px; animation: pop .45s ease-out;
+            box-shadow: 0 0 36px rgba(0,230,138,.3);
+        }
+        @keyframes pop {
+            0%  { transform: scale(0); opacity: 0; }
+            60% { transform: scale(1.15); }
+            100%{ transform: scale(1); opacity: 1; }
+        }
+        .done-title {
+            font-family: var(--font-h); font-size: 24px; font-weight: 700;
+            margin-bottom: 10px;
+        }
+        .done-text { color: var(--text-dim); font-size: 15px; line-height: 1.5; }
+        .mgr-tag {
+            font-family: var(--font-h); font-size: 22px; font-weight: 700;
+            color: var(--accent); margin: 6px 0 4px;
+        }
+        .warn-box {
+            background: rgba(255,75,110,.07);
+            border: 1px solid rgba(255,75,110,.18);
+            border-radius: 14px; padding: 14px 16px;
+            margin-top: 22px; font-size: 13px;
+            color: #ff8da0; line-height: 1.55;
+        }
+
+        /* ─── Loader ─── */
+        .loader { display: none; text-align: center; padding: 18px; }
+        .loader.on { display: block; }
+        .spin {
+            width: 36px; height: 36px; margin: 0 auto 10px;
+            border: 3px solid var(--border); border-top-color: var(--accent);
+            border-radius: 50%; animation: spin .7s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loader span { font-size: 13px; color: var(--text-dim); }
+    </style>
+</head>
+<body>
+<div class="app" id="app">
+
+    <!-- ═══ WELCOME ═══ -->
+    <div class="screen active" id="s-welcome">
+        <div class="welcome">
+            <div class="logo-wrap">⚔️</div>
+            <div class="shop-title" id="elShopName">CYBER SHOP</div>
+            <div class="shop-sub">Магазин игровой валюты</div>
+            <button class="btn btn-main" onclick="go('order')">🛒&ensp;Оформить заказ</button>
+        </div>
+    </div>
+
+    <!-- ═══ ORDER FORM ═══ -->
+    <div class="screen" id="s-order">
+        <div class="pg-head">
+            <div class="pg-back" onclick="go('welcome')">←</div>
+            <div class="pg-title">Новый заказ</div>
+        </div>
+
+        <div class="progress">
+            <span id="p1"></span><span id="p2"></span><span id="p3"></span>
+        </div>
+
+        <div class="sec-title"><div class="badge">1</div> Выбери сервер</div>
+        <div class="srv-list" id="srvList"></div>
+
+        <div class="sec-title"><div class="badge">2</div> Количество адены</div>
+        <div class="field">
+            <label>Сколько адены нужно</label>
+            <input id="inAdena" inputmode="numeric" placeholder="Например: 500000" oninput="onAdena(this)">
+            <div class="hint" id="adenaHint">Введите желаемое количество</div>
+            <div class="err" id="adenaErr"></div>
+        </div>
+
+        <div class="sec-title"><div class="badge">3</div> Ник персонажа</div>
+        <div class="field">
+            <label>Игровой никнейм</label>
+            <input id="inNick" placeholder="Например: DragonSlayer99" oninput="onNick()">
+            <div class="err" id="nickErr"></div>
+        </div>
+
+        <button class="btn btn-main" onclick="toConfirm()">Далее →</button>
+    </div>
+
+    <!-- ═══ CONFIRM ═══ -->
+    <div class="screen" id="s-confirm">
+        <div class="pg-head">
+            <div class="pg-back" onclick="go('order')">←</div>
+            <div class="pg-title">Подтверждение</div>
+        </div>
+
+        <div class="conf-card">
+            <div class="conf-head">📋 Детали заказа</div>
+            <div class="conf-row">
+                <span class="lbl">🖥️ Сервер</span>
+                <span class="val" id="cServer"></span>
+            </div>
+            <div class="conf-row">
+                <span class="lbl">💰 Адена</span>
+                <span class="val" id="cAdena"></span>
+            </div>
+            <div class="conf-row">
+                <span class="lbl">👤 Ник</span>
+                <span class="val" id="cNick"></span>
+            </div>
+        </div>
+
+        <div class="btn-group" id="confBtns">
+            <button class="btn btn-main" onclick="send()">✅ Подтвердить заказ</button>
+            <button class="btn btn-ghost" onclick="go('order')">← Вернуться</button>
+        </div>
+
+        <div class="loader" id="loader">
+            <div class="spin"></div>
+            <span>Отправляем заказ…</span>
+        </div>
+    </div>
+
+    <!-- ═══ SUCCESS ═══ -->
+    <div class="screen" id="s-success">
+        <div class="done-wrap">
+            <div class="done-ico">✓</div>
+            <div class="done-title">Заказ принят!</div>
+            <div class="done-text">С тобой свяжется наш менеджер:</div>
+            <div class="mgr-tag" id="elMgr"></div>
+            <div class="warn-box">
+                ⚠️ Внимание! Мы никогда не пишем с других аккаунтов.
+                Если вам написал кто-то другой — это мошенник.
+            </div>
+            <div style="width:100%;margin-top:24px;">
+                <button class="btn btn-main" onclick="reset()">На главную</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// ╔══════════════════════════════════════════════╗
+// ║  ⚙️  КОНФИГУРАЦИЯ — ИЗМЕНИ ЗДЕСЬ            ║
+// ╚══════════════════════════════════════════════╝
+const CFG = {
+    // 1. Вебхук n8n — замени на свой URL
+    WEBHOOK: 'https://your-n8n.com/webhook/gold-shop',
+
+    // 2. Тег менеджера
+    MANAGER: '@twwwtrsm',
+
+    // 3. Название магазина
+    NAME: 'CYBER SHOP',
+
+    // 4. Серверы — добавь / удали / переименуй
+    SERVERS: [
+        { name: 'Chronos',    icon: '⚔️' },
+        { name: 'Asterios',   icon: '🛡️' },
+        { name: 'Gran Kain',  icon: '🗡️' },
+        { name: 'Airin',      icon: '🏹' },
+    ],
+};
+// ════════════════════════════════════════════════
+
+/* ── Telegram WebApp ── */
+let tg, user;
+try {
+    tg = window.Telegram?.WebApp;
+    if (tg) { tg.ready(); tg.expand(); tg.setHeaderColor('#06071a'); }
+    user = tg?.initDataUnsafe?.user || null;
+} catch (_) {}
+
+/* ── State ── */
+let server = null;
+
+/* ── Init ── */
+(function init() {
+    document.getElementById('elShopName').textContent = CFG.NAME;
+    document.getElementById('elMgr').textContent = CFG.MANAGER;
+
+    const list = document.getElementById('srvList');
+    list.innerHTML = CFG.SERVERS.map(s => `
+        <div class="srv" data-s="${s.name}" onclick="pickSrv(this)">
+            <div class="srv-ico">${s.icon}</div>
+            <div class="srv-name">${s.name}</div>
+            <div class="srv-check">✓</div>
+        </div>
+    `).join('');
+})();
+
+/* ── Server pick ── */
+function pickSrv(el) {
+    server = el.dataset.s;
+    document.querySelectorAll('.srv').forEach(c => c.classList.remove('on'));
+    el.classList.add('on');
+    prog();
+    haptic('selection');
+}
+
+/* ── Inputs ── */
+function onAdena(inp) {
+    inp.value = inp.value.replace(/\D/g, '');
+    hide('adenaErr');
+    document.getElementById('adenaHint').textContent =
+        inp.value ? parseInt(inp.value).toLocaleString('ru-RU') + ' адены' : 'Введите желаемое количество';
+    prog();
+}
+function onNick() { hide('nickErr'); prog(); }
+
+/* ── Progress ── */
+function prog() {
+    cl('p1', !!server);
+    cl('p2', !!document.getElementById('inAdena').value);
+    cl('p3', !!document.getElementById('inNick').value);
+}
+function cl(id, on) { document.getElementById(id).classList.toggle('on', on); }
+
+/* ── Validation → Confirm ── */
+function toConfirm() {
+    let ok = true;
+    if (!server) { alert('Выбери сервер'); haptic('error'); return; }
+
+    const adena = document.getElementById('inAdena').value;
+    if (!adena || +adena <= 0) { show('adenaErr', 'Введите количество адены'); ok = false; }
+
+    const nick = document.getElementById('inNick').value.trim();
+    if (!nick) { show('nickErr', 'Введите никнейм'); ok = false; }
+
+    if (!ok) { haptic('error'); return; }
+
+    document.getElementById('cServer').textContent = server;
+    document.getElementById('cAdena').textContent = parseInt(adena).toLocaleString('ru-RU');
+    document.getElementById('cNick').textContent = nick;
+    go('confirm');
+    haptic('success');
+}
+
+/* ── Send order ── */
+async function send() {
+    const btns = document.getElementById('confBtns');
+    const ldr  = document.getElementById('loader');
+    btns.style.display = 'none';
+    ldr.classList.add('on');
+
+    const body = {
+        server,
+        adena:     document.getElementById('inAdena').value,
+        nickname:  document.getElementById('inNick').value.trim(),
+        tg_id:     user?.id || 'unknown',
+        timestamp: new Date().toISOString(),
+    };
+
+    try {
+        const r = await fetch(CFG.WEBHOOK, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body),
+        });
+        if (!r.ok) throw new Error(r.status);
+        go('success');
+        haptic('success');
+    } catch (e) {
+        console.error(e);
+        alert('Ошибка отправки. Попробуйте еще раз.');
+        btns.style.display = 'flex';
+        ldr.classList.remove('on');
+        haptic('error');
+    }
+}
+
+/* ── Navigation ── */
+function go(name) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById('s-' + name).classList.add('active');
+    const b = document.getElementById('confBtns');
+    if (b) b.style.display = 'flex';
+    document.getElementById('loader').classList.remove('on');
+}
+
+function reset() {
+    server = null;
+    document.getElementById('inAdena').value = '';
+    document.getElementById('inNick').value = '';
+    document.getElementById('adenaHint').textContent = 'Введите желаемое количество';
+    document.querySelectorAll('.srv').forEach(c => c.classList.remove('on'));
+    document.querySelectorAll('.progress span').forEach(s => s.classList.remove('on'));
+    go('welcome');
+    if (tg) tg.close();
+}
+
+/* ── Helpers ── */
+function show(id, msg) { const e = document.getElementById(id); e.textContent = msg; e.style.display = 'block'; }
+function hide(id) { document.getElementById(id).style.display = 'none'; }
+function haptic(type) { try { tg?.HapticFeedback?.notificationOccurred(type); } catch(_){} }
+</script>
+</body>
+</html>
