@@ -194,6 +194,36 @@
             background: var(--accent-dim);
         }
 
+        /* ─── Disabled server ─── */
+        .srv.off {
+            opacity: 0.35;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+        .srv.off .srv-name {
+            text-decoration: line-through;
+        }
+        .srv-status {
+            margin-left: auto;
+            font-size: 11px;
+            color: var(--danger);
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+
+        /* ─── Server loading ─── */
+        .srv-loading {
+            text-align: center;
+            padding: 20px;
+            color: var(--text-dim);
+            font-size: 13px;
+        }
+        .srv-loading .spin {
+            width: 28px; height: 28px; margin: 0 auto 10px;
+            border: 3px solid var(--border); border-top-color: var(--accent);
+            border-radius: 50%; animation: spin .7s linear infinite;
+        }
+
         /* ─── Inputs ─── */
         .field { margin-bottom: 22px; }
         .field label {
@@ -316,7 +346,9 @@
         </div>
 
         <div class="sec-title"><div class="badge">1</div> Выбери сервер</div>
-        <div class="srv-list" id="srvList"></div>
+        <div class="srv-list" id="srvList">
+            <div class="srv-loading"><div class="spin"></div>Загрузка серверов…</div>
+        </div>
 
         <div class="sec-title"><div class="badge">2</div> Количество адены</div>
         <div class="field">
@@ -393,7 +425,7 @@
 // ║  ⚙️  КОНФИГУРАЦИЯ — ИЗМЕНИ ЗДЕСЬ            ║
 // ╚══════════════════════════════════════════════╝
 const CFG = {
-    // 1. Вебхук n8n — замени на свой URL
+    // 1. Вебхук n8n
     WEBHOOK: 'https://precinct-asparagus-manhunt.ngrok-free.dev/webhook/gold-shop',
 
     // 2. Тег менеджера
@@ -402,13 +434,9 @@ const CFG = {
     // 3. Название магазина
     NAME: 'CYBER SHOP',
 
-    // 4. Серверы — добавь / удали / переименуй
-    SERVERS: [
-        { name: 'Chronos',    icon: '⚔️' },
-        { name: 'Asterios',   icon: '🛡️' },
-        { name: 'Gran Kain',  icon: '🗡️' },
-        { name: 'Airin',      icon: '🏹' },
-    ],
+    // 4. Supabase (Settings → API в Supabase)
+    SB_URL: 'https://eglzvgcynnreflzrxlsc.supabase.co',
+    SB_KEY: 'sb_publishable_613LLI5eMxqXJaUl05_xHQ_PoXvLQXA',
 };
 // ════════════════════════════════════════════════
 
@@ -424,19 +452,50 @@ try {
 let server = null;
 
 /* ── Init ── */
-(function init() {
+(async function init() {
     document.getElementById('elShopName').textContent = CFG.NAME;
     document.getElementById('elMgr').textContent = CFG.MANAGER;
-
-    const list = document.getElementById('srvList');
-    list.innerHTML = CFG.SERVERS.map(s => `
-        <div class="srv" data-s="${s.name}" onclick="pickSrv(this)">
-            <div class="srv-ico">${s.icon}</div>
-            <div class="srv-name">${s.name}</div>
-            <div class="srv-check">✓</div>
-        </div>
-    `).join('');
+    await loadServers();
 })();
+
+/* ── Load servers from Supabase ── */
+async function loadServers() {
+    const list = document.getElementById('srvList');
+    try {
+        const r = await fetch(
+            CFG.SB_URL + '/rest/v1/servers?select=*&order=id',
+            { headers: { 'apikey': CFG.SB_KEY, 'Authorization': 'Bearer ' + CFG.SB_KEY } }
+        );
+        if (!r.ok) throw new Error(r.status);
+        const servers = await r.json();
+        renderServers(servers);
+    } catch (e) {
+        console.error('Failed to load servers:', e);
+        list.innerHTML = '<div class="srv-loading" style="color:var(--danger)">Ошибка загрузки серверов</div>';
+    }
+}
+
+/* ── Render servers ── */
+function renderServers(servers) {
+    const list = document.getElementById('srvList');
+    list.innerHTML = servers.map(s => {
+        if (s.is_active) {
+            return `
+                <div class="srv" data-s="${s.name}" onclick="pickSrv(this)">
+                    <div class="srv-ico">${s.icon}</div>
+                    <div class="srv-name">${s.name}</div>
+                    <div class="srv-check">✓</div>
+                </div>`;
+        } else {
+            return `
+                <div class="srv off">
+                    <div class="srv-ico">${s.icon}</div>
+                    <div class="srv-name">${s.name}</div>
+                    <span class="srv-status">недоступен</span>
+                </div>`;
+        }
+    }).join('');
+}
 
 /* ── Server pick ── */
 function pickSrv(el) {
@@ -501,14 +560,14 @@ async function send() {
     };
 
     try {
-     const r = await fetch(CFG.WEBHOOK, {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json',
-        'ngrok-skip-browser-warning': 'true'
-    },
-    body: JSON.stringify(body),
-});
+        const r = await fetch(CFG.WEBHOOK, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'ngrok-skip-browser-warning': 'true'
+            },
+            body: JSON.stringify(body),
+        });
         if (!r.ok) throw new Error(r.status);
         go('success');
         haptic('success');
