@@ -3,45 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Cyber Shop</title>
+    <title>Shop Bebop Rox</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Exo+2:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Exo+2:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         :root {
-            --bg-primary: #06071a;
-            --bg-card: rgba(16, 18, 52, 0.85);
-            --accent: #00d4ff;
-            --accent-dim: rgba(0, 212, 255, 0.12);
-            --purple: #7b2dff;
-            --gradient: linear-gradient(135deg, #00d4ff 0%, #7b2dff 100%);
-            --text: #e4e8ff;
-            --text-dim: #6b73a0;
-            --border: rgba(90, 100, 200, 0.15);
-            --danger: #ff4b6e;
+            --bg: #050510;
+            --bg-card: rgba(12, 10, 30, 0.85);
+            --cyan: #00e5ff;
+            --cyan-dim: rgba(0, 229, 255, 0.1);
+            --purple: #a855f7;
+            --purple-dim: rgba(168, 85, 247, 0.1);
+            --gradient: linear-gradient(135deg, #00e5ff 0%, #a855f7 100%);
+            --gradient-r: linear-gradient(135deg, #a855f7 0%, #00e5ff 100%);
+            --text: #e0e8ff;
+            --text-dim: #5a6088;
+            --border: rgba(0, 229, 255, 0.1);
+            --danger: #ff3366;
             --success: #00e68a;
-            --font-h: 'Rajdhani', 'Segoe UI', sans-serif;
-            --font-b: 'Exo 2', 'Segoe UI', sans-serif;
+            --font-h: 'Rajdhani', sans-serif;
+            --font-b: 'Exo 2', sans-serif;
         }
 
         html, body { height: 100%; }
         body {
             font-family: var(--font-b);
-            background: var(--bg-primary);
+            background: var(--bg);
             color: var(--text);
             overflow-x: hidden;
         }
 
+        /* hex grid background */
         body::before {
             content: '';
             position: fixed; inset: 0;
             background:
-                radial-gradient(ellipse at 15% 30%, rgba(123,45,255,.12) 0%, transparent 55%),
-                radial-gradient(ellipse at 85% 15%, rgba(0,212,255,.09) 0%, transparent 50%),
-                radial-gradient(ellipse at 50% 95%, rgba(123,45,255,.07) 0%, transparent 45%);
+                radial-gradient(ellipse at 20% 20%, rgba(168,85,247,.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(0,229,255,.1) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(168,85,247,.05) 0%, transparent 60%);
             pointer-events: none; z-index: 0;
+        }
+        body::after {
+            content: '';
+            position: fixed; inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='69' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0l30 17.32v34.64L30 69.28 0 51.96V17.32z' fill='none' stroke='%2300e5ff' stroke-opacity='0.04' stroke-width='1'/%3E%3C/svg%3E");
+            background-size: 60px 69px;
+            pointer-events: none; z-index: 0;
+            opacity: .6;
         }
 
         .app {
@@ -62,33 +73,85 @@
         .welcome {
             display: flex; flex-direction: column;
             align-items: center; justify-content: center;
-            min-height: 82vh; text-align: center;
+            min-height: 85vh; text-align: center;
         }
         .logo-wrap {
-            width: 96px; height: 96px;
-            background: var(--gradient);
-            border-radius: 26px;
+            width: 110px; height: 110px;
+            border-radius: 28px;
             display: flex; align-items: center; justify-content: center;
-            font-size: 46px; margin-bottom: 28px;
+            margin-bottom: 20px;
             position: relative;
-            box-shadow: 0 0 40px rgba(0,212,255,.25), 0 0 80px rgba(123,45,255,.15);
+            overflow: hidden;
+            border: 2px solid rgba(0,229,255,.2);
+            background: rgba(10,8,26,.9);
+            box-shadow: 0 0 50px rgba(0,229,255,.2), 0 0 100px rgba(168,85,247,.1);
         }
-        .logo-wrap::after {
-            content: ''; position: absolute; inset: -4px;
-            border-radius: 30px; background: var(--gradient);
-            z-index: -1; filter: blur(18px); opacity: .45;
+        .logo-wrap img {
+            width: 100%; height: 100%; object-fit: cover;
+            border-radius: 26px;
+        }
+        .logo-wrap .logo-emoji {
+            font-size: 54px;
         }
         .shop-title {
-            font-family: var(--font-h); font-size: 34px; font-weight: 700;
+            font-family: var(--font-h); font-weight: 700;
             letter-spacing: 3px;
-            background: var(--gradient);
+        }
+        .shop-title .t-cyan {
+            font-size: 16px;
+            color: var(--cyan);
+            display: block;
+            text-shadow: 0 0 20px rgba(0,229,255,.5);
+        }
+        .shop-title .t-main {
+            font-size: 36px;
+            background: var(--gradient-r);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            text-shadow: none;
         }
         .shop-sub {
-            color: var(--text-dim); font-size: 13px;
-            letter-spacing: 2px; text-transform: uppercase;
-            margin: 6px 0 44px;
+            color: var(--text-dim); font-size: 12px;
+            letter-spacing: 3px; text-transform: uppercase;
+            margin: 4px 0 36px;
         }
+
+        /* ─── Menu cards ─── */
+        .menu-cards { width: 100%; display: flex; flex-direction: column; gap: 12px; }
+        .menu-card {
+            width: 100%; padding: 18px 16px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            cursor: pointer;
+            display: flex; align-items: center; gap: 14px;
+            transition: all .25s;
+            position: relative;
+            overflow: hidden;
+        }
+        .menu-card::before {
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(135deg, rgba(0,229,255,.03), rgba(168,85,247,.03));
+            opacity: 0; transition: opacity .25s;
+        }
+        .menu-card:hover::before, .menu-card:active::before { opacity: 1; }
+        .menu-card:active { transform: scale(.97); }
+        .menu-card:hover {
+            border-color: rgba(0,229,255,.25);
+            box-shadow: 0 0 30px rgba(0,229,255,.08);
+        }
+        .mc-ico {
+            width: 48px; height: 48px;
+            background: var(--gradient);
+            border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 24px; flex-shrink: 0;
+            box-shadow: 0 0 20px rgba(0,229,255,.2);
+        }
+        .mc-ico.purple { background: var(--gradient-r); box-shadow: 0 0 20px rgba(168,85,247,.2); }
+        .mc-text { text-align: left; position: relative; z-index: 1; }
+        .mc-title { font-family: var(--font-h); font-size: 17px; font-weight: 700; margin-bottom: 2px; }
+        .mc-desc { font-size: 11px; color: var(--text-dim); line-height: 1.4; }
+        .mc-arrow { margin-left: auto; color: var(--text-dim); font-size: 18px; position: relative; z-index: 1; }
 
         /* ─── Buttons ─── */
         .btn {
@@ -99,52 +162,45 @@
             -webkit-appearance: none;
         }
         .btn:active { transform: scale(.96); }
-
         .btn-main {
             padding: 16px; font-size: 17px; color: #fff;
             background: var(--gradient);
-            box-shadow: 0 4px 24px rgba(0,212,255,.2);
+            box-shadow: 0 4px 30px rgba(0,229,255,.25);
             position: relative; overflow: hidden;
+        }
+        .btn-main.purple {
+            background: var(--gradient-r);
+            box-shadow: 0 4px 30px rgba(168,85,247,.25);
         }
         .btn-main::after {
             content: ''; position: absolute;
             top: 0; left: -110%; width: 60%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,.18), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,.15), transparent);
             transition: left .55s;
         }
         .btn-main:hover::after { left: 110%; }
-
         .btn-ghost {
             padding: 14px; font-size: 15px;
             color: var(--text-dim);
             background: transparent;
             border: 1px solid var(--border) !important;
         }
-
         .btn-group { display: flex; flex-direction: column; gap: 10px; }
 
         /* ─── Page header ─── */
-        .pg-head {
-            display: flex; align-items: center; gap: 12px;
-            margin-bottom: 22px;
-        }
+        .pg-head { display: flex; align-items: center; gap: 12px; margin-bottom: 22px; }
         .pg-back {
             width: 38px; height: 38px;
             background: var(--bg-card); border: 1px solid var(--border);
             border-radius: 12px; display: flex; align-items: center; justify-content: center;
             cursor: pointer; color: var(--text); font-size: 18px;
-            transition: transform .15s;
         }
         .pg-back:active { transform: scale(.9); }
         .pg-title { font-family: var(--font-h); font-size: 21px; font-weight: 700; }
 
         /* ─── Progress ─── */
         .progress { display: flex; gap: 6px; margin-bottom: 26px; }
-        .progress span {
-            flex: 1; height: 3px;
-            background: var(--border); border-radius: 2px;
-            transition: background .3s;
-        }
+        .progress span { flex: 1; height: 3px; background: rgba(0,229,255,.1); border-radius: 2px; transition: background .3s; }
         .progress span.on { background: var(--gradient); }
 
         /* ─── Section titles ─── */
@@ -163,73 +219,41 @@
         /* ─── Server cards ─── */
         .srv-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 26px; }
         .srv {
-            padding: 14px 16px;
+            padding: 13px 16px;
             background: var(--bg-card); border: 1px solid var(--border);
             border-radius: 14px; cursor: pointer;
-            display: flex; align-items: center; gap: 14px;
+            display: flex; align-items: center; gap: 12px;
             transition: all .2s;
         }
         .srv:active { transform: scale(.97); }
         .srv.on {
-            border-color: var(--accent);
-            background: var(--accent-dim);
-            box-shadow: 0 0 24px rgba(0,212,255,.08);
+            border-color: var(--cyan);
+            background: var(--cyan-dim);
+            box-shadow: 0 0 25px rgba(0,229,255,.1);
         }
         .srv-ico {
-            width: 40px; height: 40px;
-            background: rgba(20,22,58,.9); border-radius: 11px;
+            width: 36px; height: 36px;
+            background: rgba(10,8,26,.9); border-radius: 10px;
             display: flex; align-items: center; justify-content: center;
-            font-size: 19px; transition: background .25s;
+            font-size: 16px; transition: background .25s;
+            border: 1px solid rgba(0,229,255,.08);
         }
-        .srv.on .srv-ico { background: var(--gradient); }
-        .srv-name { font-family: var(--font-h); font-size: 16px; font-weight: 600; }
+        .srv.on .srv-ico { background: var(--gradient); border-color: transparent; }
+        .srv-name { font-family: var(--font-h); font-size: 15px; font-weight: 600; }
         .srv-check {
-            margin-left: auto; width: 22px; height: 22px;
-            border: 2px solid var(--border); border-radius: 50%;
+            margin-left: auto; width: 20px; height: 20px;
+            border: 2px solid rgba(0,229,255,.15); border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
-            font-size: 12px; color: transparent; transition: all .2s;
+            font-size: 11px; color: transparent; transition: all .2s;
         }
         .srv.on .srv-check {
-            border-color: var(--accent); color: var(--accent);
-            background: var(--accent-dim);
-        }
-
-        /* ─── Disabled server ─── */
-        .srv.off {
-            opacity: 0.35;
-            cursor: not-allowed;
-            pointer-events: none;
-        }
-        .srv.off .srv-name {
-            text-decoration: line-through;
-        }
-        .srv-status {
-            margin-left: auto;
-            font-size: 11px;
-            color: var(--danger);
-            font-weight: 500;
-            letter-spacing: 0.3px;
-        }
-
-        /* ─── Server loading ─── */
-        .srv-loading {
-            text-align: center;
-            padding: 20px;
-            color: var(--text-dim);
-            font-size: 13px;
-        }
-        .srv-loading .spin {
-            width: 28px; height: 28px; margin: 0 auto 10px;
-            border: 3px solid var(--border); border-top-color: var(--accent);
-            border-radius: 50%; animation: spin .7s linear infinite;
+            border-color: var(--cyan); color: var(--cyan);
+            background: var(--cyan-dim);
         }
 
         /* ─── Inputs ─── */
         .field { margin-bottom: 22px; }
-        .field label {
-            display: block; font-size: 12px; color: var(--text-dim);
-            letter-spacing: .4px; margin-bottom: 7px;
-        }
+        .field label { display: block; font-size: 12px; color: var(--text-dim); letter-spacing: .4px; margin-bottom: 7px; }
         .field input {
             width: 100%; padding: 13px 16px;
             background: var(--bg-card); border: 1px solid var(--border);
@@ -238,18 +262,12 @@
             outline: none; transition: border-color .25s, box-shadow .25s;
         }
         .field input:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(0,212,255,.1);
+            border-color: var(--cyan);
+            box-shadow: 0 0 0 3px rgba(0,229,255,.08);
         }
-        .field input::placeholder { color: rgba(107,115,160,.45); }
-        .field .hint {
-            font-size: 11px; color: var(--text-dim);
-            margin-top: 5px; opacity: .7;
-        }
-        .field .err {
-            font-size: 12px; color: var(--danger);
-            margin-top: 5px; display: none;
-        }
+        .field input::placeholder { color: rgba(90,96,136,.5); }
+        .field .hint { font-size: 11px; color: var(--text-dim); margin-top: 5px; opacity: .7; }
+        .field .err { font-size: 12px; color: var(--danger); margin-top: 5px; display: none; }
 
         /* ─── Confirm card ─── */
         .conf-card {
@@ -257,20 +275,14 @@
             border: 1px solid var(--border);
             border-radius: 18px; padding: 22px; margin-bottom: 22px;
         }
-        .conf-head {
-            font-family: var(--font-h); font-size: 20px; font-weight: 700;
-            text-align: center; margin-bottom: 18px;
-        }
+        .conf-head { font-family: var(--font-h); font-size: 20px; font-weight: 700; text-align: center; margin-bottom: 18px; }
         .conf-row {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 11px 0;
-            border-bottom: 1px solid var(--border);
+            padding: 11px 0; border-bottom: 1px solid var(--border);
         }
         .conf-row:last-child { border-bottom: none; }
         .conf-row .lbl { color: var(--text-dim); font-size: 14px; }
-        .conf-row .val {
-            font-family: var(--font-h); font-weight: 600; font-size: 16px;
-        }
+        .conf-row .val { font-family: var(--font-h); font-weight: 600; font-size: 16px; }
 
         /* ─── Success ─── */
         .done-wrap {
@@ -285,28 +297,67 @@
             display: flex; align-items: center; justify-content: center;
             font-size: 40px; color: #fff;
             margin-bottom: 22px; animation: pop .45s ease-out;
-            box-shadow: 0 0 36px rgba(0,230,138,.3);
+            box-shadow: 0 0 40px rgba(0,230,138,.3);
         }
-        @keyframes pop {
-            0%  { transform: scale(0); opacity: 0; }
-            60% { transform: scale(1.15); }
-            100%{ transform: scale(1); opacity: 1; }
-        }
-        .done-title {
-            font-family: var(--font-h); font-size: 24px; font-weight: 700;
-            margin-bottom: 10px;
-        }
+        @keyframes pop { 0%{transform:scale(0);opacity:0}60%{transform:scale(1.15)}100%{transform:scale(1);opacity:1} }
+        .done-title { font-family: var(--font-h); font-size: 24px; font-weight: 700; margin-bottom: 10px; }
         .done-text { color: var(--text-dim); font-size: 15px; line-height: 1.5; }
         .mgr-tag {
             font-family: var(--font-h); font-size: 22px; font-weight: 700;
-            color: var(--accent); margin: 6px 0 4px;
+            color: var(--cyan); margin: 6px 0 4px;
+            text-shadow: 0 0 20px rgba(0,229,255,.4);
         }
         .warn-box {
-            background: rgba(255,75,110,.07);
-            border: 1px solid rgba(255,75,110,.18);
+            background: rgba(255,51,102,.06);
+            border: 1px solid rgba(255,51,102,.15);
             border-radius: 14px; padding: 14px 16px;
             margin-top: 22px; font-size: 13px;
-            color: #ff8da0; line-height: 1.55;
+            color: #ff6b8a; line-height: 1.55;
+        }
+
+        /* ─── Bot page ─── */
+        .bot-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 18px; padding: 20px;
+            margin-bottom: 16px;
+        }
+        .bot-card h3 {
+            font-family: var(--font-h);
+            font-size: 18px; font-weight: 700;
+            margin-bottom: 12px;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .bot-card p {
+            font-size: 14px; color: var(--text-dim);
+            line-height: 1.6; margin-bottom: 8px;
+        }
+        .bot-card p:last-child { margin-bottom: 0; }
+        .bot-features { display: flex; flex-direction: column; gap: 10px; margin-top: 14px; }
+        .bot-feat {
+            display: flex; align-items: center; gap: 10px;
+            font-size: 14px;
+        }
+        .bf-ico {
+            width: 30px; height: 30px;
+            background: var(--purple-dim);
+            border: 1px solid rgba(168,85,247,.15);
+            border-radius: 9px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px; flex-shrink: 0;
+        }
+        .bot-price-row {
+            display: flex; justify-content: space-between; align-items: center;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 18px; padding: 18px 20px;
+            margin-bottom: 16px;
+        }
+        .bp-label { font-size: 14px; color: var(--text-dim); }
+        .bp-value {
+            font-family: var(--font-h); font-size: 26px; font-weight: 700;
+            background: var(--gradient-r);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
 
         /* ─── Loader ─── */
@@ -314,7 +365,7 @@
         .loader.on { display: block; }
         .spin {
             width: 36px; height: 36px; margin: 0 auto 10px;
-            border: 3px solid var(--border); border-top-color: var(--accent);
+            border: 3px solid var(--border); border-top-color: var(--cyan);
             border-radius: 50%; animation: spin .7s linear infinite;
         }
         @keyframes spin { to { transform: rotate(360deg); } }
@@ -327,10 +378,56 @@
     <!-- ═══ WELCOME ═══ -->
     <div class="screen active" id="s-welcome">
         <div class="welcome">
-            <div class="logo-wrap">⚔️</div>
-            <div class="shop-title" id="elShopName">CYBER SHOP</div>
-            <div class="shop-sub">Магазин игровой валюты</div>
-            <button class="btn btn-main" onclick="go('order')">🛒&ensp;Оформить заказ</button>
+            <div class="logo-wrap"><span class="logo-emoji">🐗</span></div>
+            <div class="shop-title">
+                <span class="t-cyan">SHOP</span>
+                <span class="t-main">BEBOP ROX</span>
+            </div>
+            <div class="shop-sub">Lineage 2 · Голд & Боты</div>
+            <div class="menu-cards">
+                <div class="menu-card" onclick="go('order')">
+                    <div class="mc-ico">💰</div>
+                    <div class="mc-text">
+                        <div class="mc-title">Купить голд</div>
+                        <div class="mc-desc">Игровая валюта на любой сервер</div>
+                    </div>
+                    <div class="mc-arrow">→</div>
+                </div>
+                <div class="menu-card" onclick="go('bot')">
+                    <div class="mc-ico purple">🤖</div>
+                    <div class="mc-text">
+                        <div class="mc-title">Купить бота</div>
+                        <div class="mc-desc">Spoil / Auto Farm Bot</div>
+                    </div>
+                    <div class="mc-arrow">→</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══ BOT PAGE ═══ -->
+    <div class="screen" id="s-bot">
+        <div class="pg-head">
+            <div class="pg-back" onclick="go('welcome')">←</div>
+            <div class="pg-title">Spoil / Auto Farm Bot</div>
+        </div>
+
+        <div class="bot-card">
+            <h3>🤖 Что умеет бот?</h3>
+            <p>Полная автоматизация фарма в Lineage 2. Работает на всех поддерживаемых серверах.</p>
+            <div class="bot-features">
+                <div class="bot-feat"><div class="bf-ico">⚔️</div><span>Автофарм мобов и ресурсов</span></div>
+                <div class="bot-feat"><div class="bf-ico">🎯</div><span>Spoil + авто-сбор дропа</span></div>
+                <div class="bot-feat"><div class="bf-ico">🛡️</div><span>Автобафф и автохил</span></div>
+                <div class="bot-feat"><div class="bf-ico">🔄</div><span>Работает 24/7 без участия</span></div>
+                <div class="bot-feat"><div class="bf-ico">📱</div><span>Удалённое управление</span></div>
+            </div>
+        </div>
+
+        <div class="btn-group">
+            <button class="btn btn-main purple" onclick="openManager()">💬 Написать менеджеру</button>
+            <button class="btn btn-ghost" onclick="window.open(CFG.BOT_MANUAL,'_blank')">📖 Мануал по использованию</button>
+            <button class="btn btn-ghost" onclick="go('welcome')">← Назад</button>
         </div>
     </div>
 
@@ -338,7 +435,7 @@
     <div class="screen" id="s-order">
         <div class="pg-head">
             <div class="pg-back" onclick="go('welcome')">←</div>
-            <div class="pg-title">Новый заказ</div>
+            <div class="pg-title">Купить голд</div>
         </div>
 
         <div class="progress">
@@ -346,16 +443,14 @@
         </div>
 
         <div class="sec-title"><div class="badge">1</div> Выбери сервер</div>
-        <div class="srv-list" id="srvList">
-            <div class="srv-loading"><div class="spin"></div>Загрузка серверов…</div>
-        </div>
+        <div class="srv-list" id="srvList"></div>
 
-        <div class="sec-title"><div class="badge">2</div> Количество адены</div>
+        <div class="sec-title"><div class="badge">2</div> Количество голда</div>
         <div class="field">
-            <label>Сколько адены нужно</label>
-            <input id="inAdena" inputmode="numeric" placeholder="Например: 500000" oninput="onAdena(this)">
-            <div class="hint" id="adenaHint">Введите желаемое количество</div>
-            <div class="err" id="adenaErr"></div>
+            <label>Сколько голда нужно</label>
+            <input id="inGold" inputmode="numeric" placeholder="Например: 500000" oninput="onGold(this)">
+            <div class="hint" id="goldHint">Введите желаемое количество</div>
+            <div class="err" id="goldErr"></div>
         </div>
 
         <div class="sec-title"><div class="badge">3</div> Ник персонажа</div>
@@ -377,18 +472,9 @@
 
         <div class="conf-card">
             <div class="conf-head">📋 Детали заказа</div>
-            <div class="conf-row">
-                <span class="lbl">🖥️ Сервер</span>
-                <span class="val" id="cServer"></span>
-            </div>
-            <div class="conf-row">
-                <span class="lbl">💰 Адена</span>
-                <span class="val" id="cAdena"></span>
-            </div>
-            <div class="conf-row">
-                <span class="lbl">👤 Ник</span>
-                <span class="val" id="cNick"></span>
-            </div>
+            <div class="conf-row"><span class="lbl">🖥️ Сервер</span><span class="val" id="cServer"></span></div>
+            <div class="conf-row"><span class="lbl">💰 Голд</span><span class="val" id="cGold"></span></div>
+            <div class="conf-row"><span class="lbl">👤 Ник</span><span class="val" id="cNick"></span></div>
         </div>
 
         <div class="btn-group" id="confBtns">
@@ -397,8 +483,7 @@
         </div>
 
         <div class="loader" id="loader">
-            <div class="spin"></div>
-            <span>Отправляем заказ…</span>
+            <div class="spin"></div><span>Отправляем заказ…</span>
         </div>
     </div>
 
@@ -422,185 +507,135 @@
 
 <script>
 // ╔══════════════════════════════════════════════╗
-// ║  ⚙️  КОНФИГУРАЦИЯ — ИЗМЕНИ ЗДЕСЬ            ║
+// ║  ⚙️  КОНФИГУРАЦИЯ                           ║
 // ╚══════════════════════════════════════════════╝
 const CFG = {
-    // 1. Вебхук n8n
-    WEBHOOK: 'https://precinct-asparagus-manhunt.ngrok-free.dev/webhook/gold-shop',
+    WEBHOOK: 'https://teststhunder.vychka-artur1996.workers.dev/webhook/gold-shop',
+    MANAGER: '@bebop_rox',
+    NAME: 'BEBOP ROX',
+    BOT_MANUAL: 'https://telegra.ph/YOUR-MANUAL-PAGE',  // ← ссылка на мануал
 
-    // 2. Тег менеджера
-    MANAGER: '@twwwtrsm',
-
-    // 3. Название магазина
-    NAME: 'CYBER SHOP',
-
-    // 4. Supabase (Settings → API в Supabase)
-    SB_URL: 'https://eglzvgcynnreflzrxlsc.supabase.co',
-    SB_KEY: 'sb_publishable_613LLI5eMxqXJaUl05_xHQ_PoXvLQXA',
+    SERVERS: [
+        { name: 'BoHpts.org',      icon: '⚔️' },
+        { name: 'Scryde.net',      icon: '🗡️' },
+        { name: 'TheBattle.club',  icon: '🛡️' },
+        { name: 'Asterios',        icon: '🏹' },
+        { name: 'Euro-PvP.com',    icon: '⚡' },
+        { name: 'L2Eirin.com',     icon: '🔥' },
+        { name: 'KetraWars.net',   icon: '💀' },
+    ],
 };
 // ════════════════════════════════════════════════
 
-/* ── Telegram WebApp ── */
 let tg, user;
 try {
     tg = window.Telegram?.WebApp;
-    if (tg) { tg.ready(); tg.expand(); tg.setHeaderColor('#06071a'); }
+    if (tg) { tg.ready(); tg.expand(); tg.setHeaderColor('#050510'); }
     user = tg?.initDataUnsafe?.user || null;
 } catch (_) {}
 
-/* ── State ── */
 let server = null;
 
-/* ── Init ── */
-(async function init() {
-    document.getElementById('elShopName').textContent = CFG.NAME;
+(function init() {
     document.getElementById('elMgr').textContent = CFG.MANAGER;
-    await loadServers();
+
+    const list = document.getElementById('srvList');
+    list.innerHTML = CFG.SERVERS.map(s => `
+        <div class="srv" data-s="${s.name}" onclick="pickSrv(this)">
+            <div class="srv-ico">${s.icon}</div>
+            <div class="srv-name">${s.name}</div>
+            <div class="srv-check">✓</div>
+        </div>
+    `).join('');
 })();
 
-/* ── Load servers from Supabase ── */
-async function loadServers() {
-    const list = document.getElementById('srvList');
-    try {
-        const r = await fetch(
-            CFG.SB_URL + '/rest/v1/servers?select=*&order=id',
-            { headers: { 'apikey': CFG.SB_KEY, 'Authorization': 'Bearer ' + CFG.SB_KEY } }
-        );
-        if (!r.ok) throw new Error(r.status);
-        const servers = await r.json();
-        renderServers(servers);
-    } catch (e) {
-        console.error('Failed to load servers:', e);
-        list.innerHTML = '<div class="srv-loading" style="color:var(--danger)">Ошибка загрузки серверов</div>';
-    }
-}
-
-/* ── Render servers ── */
-function renderServers(servers) {
-    const list = document.getElementById('srvList');
-    list.innerHTML = servers.map(s => {
-        if (s.is_active) {
-            return `
-                <div class="srv" data-s="${s.name}" onclick="pickSrv(this)">
-                    <div class="srv-ico">${s.icon}</div>
-                    <div class="srv-name">${s.name}</div>
-                    <div class="srv-check">✓</div>
-                </div>`;
-        } else {
-            return `
-                <div class="srv off">
-                    <div class="srv-ico">${s.icon}</div>
-                    <div class="srv-name">${s.name}</div>
-                    <span class="srv-status">недоступен</span>
-                </div>`;
-        }
-    }).join('');
-}
-
-/* ── Server pick ── */
 function pickSrv(el) {
     server = el.dataset.s;
     document.querySelectorAll('.srv').forEach(c => c.classList.remove('on'));
     el.classList.add('on');
-    prog();
-    haptic('selection');
+    prog(); haptic('selection');
 }
 
-/* ── Inputs ── */
-function onAdena(inp) {
+function openManager() {
+    const tag = CFG.MANAGER.replace('@', '');
+    window.open('https://t.me/' + tag, '_blank');
+}
+
+function onGold(inp) {
     inp.value = inp.value.replace(/\D/g, '');
-    hide('adenaErr');
-    document.getElementById('adenaHint').textContent =
-        inp.value ? parseInt(inp.value).toLocaleString('ru-RU') + ' адены' : 'Введите желаемое количество';
+    hide('goldErr');
+    document.getElementById('goldHint').textContent =
+        inp.value ? parseInt(inp.value).toLocaleString('ru-RU') + ' голда' : 'Введите желаемое количество';
     prog();
 }
 function onNick() { hide('nickErr'); prog(); }
 
-/* ── Progress ── */
 function prog() {
     cl('p1', !!server);
-    cl('p2', !!document.getElementById('inAdena').value);
+    cl('p2', !!document.getElementById('inGold').value);
     cl('p3', !!document.getElementById('inNick').value);
 }
 function cl(id, on) { document.getElementById(id).classList.toggle('on', on); }
 
-/* ── Validation → Confirm ── */
 function toConfirm() {
     let ok = true;
     if (!server) { alert('Выбери сервер'); haptic('error'); return; }
-
-    const adena = document.getElementById('inAdena').value;
-    if (!adena || +adena <= 0) { show('adenaErr', 'Введите количество адены'); ok = false; }
-
+    const gold = document.getElementById('inGold').value;
+    if (!gold || +gold <= 0) { show('goldErr', 'Введите количество голда'); ok = false; }
     const nick = document.getElementById('inNick').value.trim();
     if (!nick) { show('nickErr', 'Введите никнейм'); ok = false; }
-
     if (!ok) { haptic('error'); return; }
-
     document.getElementById('cServer').textContent = server;
-    document.getElementById('cAdena').textContent = parseInt(adena).toLocaleString('ru-RU');
+    document.getElementById('cGold').textContent = parseInt(gold).toLocaleString('ru-RU');
     document.getElementById('cNick').textContent = nick;
-    go('confirm');
-    haptic('success');
+    go('confirm'); haptic('success');
 }
 
-/* ── Send order ── */
 async function send() {
     const btns = document.getElementById('confBtns');
-    const ldr  = document.getElementById('loader');
-    btns.style.display = 'none';
-    ldr.classList.add('on');
-
+    const ldr = document.getElementById('loader');
+    btns.style.display = 'none'; ldr.classList.add('on');
     const body = {
-        server,
-        adena:     document.getElementById('inAdena').value,
-        nickname:  document.getElementById('inNick').value.trim(),
-        tg_id:     user?.id || 'unknown',
+        server, gold: document.getElementById('inGold').value,
+        nickname: document.getElementById('inNick').value.trim(),
+        tg_id: user?.id || 'unknown',
         timestamp: new Date().toISOString(),
     };
-
     try {
         const r = await fetch(CFG.WEBHOOK, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'ngrok-skip-browser-warning': 'true'
-            },
+            headers: { 'Content-Type': 'application/json', 'ngrok-skip-browser-warning': 'true' },
             body: JSON.stringify(body),
         });
         if (!r.ok) throw new Error(r.status);
-        go('success');
-        haptic('success');
+        go('success'); haptic('success');
     } catch (e) {
         console.error(e);
         alert('Ошибка отправки. Попробуйте еще раз.');
-        btns.style.display = 'flex';
-        ldr.classList.remove('on');
-        haptic('error');
+        btns.style.display = 'flex'; ldr.classList.remove('on'); haptic('error');
     }
 }
 
-/* ── Navigation ── */
 function go(name) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.getElementById('s-' + name).classList.add('active');
     const b = document.getElementById('confBtns');
     if (b) b.style.display = 'flex';
     document.getElementById('loader').classList.remove('on');
+    window.scrollTo(0, 0);
 }
 
 function reset() {
     server = null;
-    document.getElementById('inAdena').value = '';
+    document.getElementById('inGold').value = '';
     document.getElementById('inNick').value = '';
-    document.getElementById('adenaHint').textContent = 'Введите желаемое количество';
+    document.getElementById('goldHint').textContent = 'Введите желаемое количество';
     document.querySelectorAll('.srv').forEach(c => c.classList.remove('on'));
     document.querySelectorAll('.progress span').forEach(s => s.classList.remove('on'));
     go('welcome');
     if (tg) tg.close();
 }
 
-/* ── Helpers ── */
 function show(id, msg) { const e = document.getElementById(id); e.textContent = msg; e.style.display = 'block'; }
 function hide(id) { document.getElementById(id).style.display = 'none'; }
 function haptic(type) { try { tg?.HapticFeedback?.notificationOccurred(type); } catch(_){} }
